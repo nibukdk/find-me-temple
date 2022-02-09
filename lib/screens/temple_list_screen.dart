@@ -1,3 +1,4 @@
+import 'package:church/drawer/drawer.dart';
 import 'package:church/provider/temple_provider.dart';
 import 'package:church/widgets/temple_item_widget.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,8 @@ class TempleListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     var templeList = Provider.of<TempleProvider>(context).getTemples;
     return Scaffold(
+      appBar: AppBar(title: const Text("Events Screen")),
+      drawer: CustomDrawer(),
       body: SizedBox(
         width: 400,
         height: 200,

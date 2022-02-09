@@ -1,3 +1,4 @@
+import 'package:church/drawer/drawer.dart';
 import 'package:church/provider/events_provider.dart';
 import 'package:church/widgets/event_item_widget.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,7 @@ class EventsListScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(title: const Text("Events Screen")),
+      drawer: CustomDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SizedBox(

@@ -32,6 +32,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp.router(
         routeInformationParser: _router.routeInformationParser,
         routerDelegate: _router.routerDelegate,
+        theme: findTemepleTheme,
       ),
     );
   }
@@ -43,10 +44,12 @@ class MyApp extends StatelessWidget {
     ),
     GoRoute(
       path: "/events-list",
+      name: 'eventsListScreen',
       builder: (ctx, state) => const EventsListScreen(),
     ),
     GoRoute(
       path: "/temple-list",
+      name: 'templeListScreen',
       builder: (ctx, state) => const TempleListScreen(),
     ),
   ]);
