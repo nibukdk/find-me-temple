@@ -16,8 +16,8 @@ class TempleItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 210,
+    return SizedBox(
+      height: 200,
       width: 200,
       child: Card(
         elevation: 6,
@@ -52,23 +52,3 @@ class TempleItemWidget extends StatelessWidget {
     );
   }
 }
-
-
-
-
-  // Padding(
-  //             padding: const EdgeInsets.all(8.0),
-  //             child: Row(
-  //               mainAxisAlignment: MainAxisAlignment.spaceAround,
-  //               children: [
-  //                 Text(
-  //                   address,
-  //                   style: Theme.of(context).textTheme.bodyText1,
-  //                 ),
-  //                 Text(
-  //                   address,
-  //                   style: Theme.of(context).textTheme.bodyText1,
-  //                 ),
-  //               ],
-  //             ),
-  //           )

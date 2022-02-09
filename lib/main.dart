@@ -1,5 +1,7 @@
 import 'package:church/provider/events_provider.dart';
 import 'package:church/provider/temple_provider.dart';
+import 'package:church/screens/events_list_screen.dart';
+import 'package:church/screens/temple_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -18,7 +20,7 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,10 +29,25 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => TempleProvider()),
         ChangeNotifierProvider(create: (_) => EventsProvider()),
       ],
-      child: MaterialApp(
-        home: HomeScreen(),
-        theme: findTemepleTheme,
+      child: MaterialApp.router(
+        routeInformationParser: _router.routeInformationParser,
+        routerDelegate: _router.routerDelegate,
       ),
     );
   }
+
+  final _router = GoRouter(routes: [
+    GoRoute(
+      path: "/",
+      builder: (ctx, state) => const HomeScreen(),
+    ),
+    GoRoute(
+      path: "/events-list",
+      builder: (ctx, state) => const EventsListScreen(),
+    ),
+    GoRoute(
+      path: "/temple-list",
+      builder: (ctx, state) => const TempleListScreen(),
+    ),
+  ]);
 }

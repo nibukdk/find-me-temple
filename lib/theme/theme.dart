@@ -7,12 +7,13 @@ ThemeData _findTempleTheme() {
   final ThemeData base = ThemeData.light();
   return base.copyWith(
       colorScheme: base.colorScheme.copyWith(
-        primary: const Color.fromARGB(255, 255, 225, 166),
-        secondary: const Color.fromARGB(255, 40, 46, 121),
-        error: Colors.red,
-        onPrimary: Colors.black,
-        onSecondary: Colors.white,
-      ),
+          primary: const Color.fromARGB(255, 255, 225, 166),
+          secondary: const Color.fromARGB(255, 40, 46, 121),
+          error: Colors.red,
+          onPrimary: Colors.black,
+          onSecondary: Colors.white,
+          background: const Color.fromARGB(255, 255, 225, 166),
+          onBackground: Colors.black),
       textTheme: _findTempleTextTheme(base.textTheme),
       // Define styles for elevated button
       elevatedButtonTheme: ElevatedButtonThemeData(
