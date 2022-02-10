@@ -58,3 +58,6 @@ lib/firebase_options.dart
 
 #ANdriod manifest
 android/app/src/main/AndroidManifest.xml
+
+#Swift Manifest 
+ios/Runner/AppDelegate.swift
