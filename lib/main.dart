@@ -21,7 +21,7 @@ void main() async {
 }
 
 void initialization(BuildContext context) async {
-  // Initialize setting while splash screen is running
+  // Initialize setting while plash screen is running
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );

@@ -52,7 +52,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
           ),
           ListTile(
             leading: Image.asset(
-              "assets/icons/temple_small_25x25.png",
+              "assets/icons/om_icon_25x25.png",
               fit: BoxFit.cover,
             ),
             title: const Text('Temples'),

@@ -72,6 +72,7 @@ flutter:
     - assets/images/events/img_4.jpg
     - assets/icons/temple.png
     - assets/icons/temple_small_25x25.png
+    - assets/icons/om_icon_25x25.png
     # Dot ENV
     - .env
 
@@ -106,7 +107,9 @@ flutter:
 flutter_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/icons/temple.png"
+  image_path: "assets/icons/Launch_Icon_864x864.png"
+  adaptive_icon_background: "#FFD1A6"
+  adaptive_icon_foreground: "assets/splash/om_lotus_splash.png"
 
 
 
@@ -114,6 +117,8 @@ flutter_icons:
 flutter_native_splash:
   # background_image: "assets/splash/om_splash.png"
   background_image: "assets/splash/om_lotus_splash.png"
+  
+
 
   
 
