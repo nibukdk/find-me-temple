@@ -52,3 +52,9 @@ lib/config
 
 #Firebase options
 lib/firebase_options.dart
+
+#DOT ENV
+*.env
+
+#ANdriod manifest
+android/app/src/main/AndroidManifest.xml
