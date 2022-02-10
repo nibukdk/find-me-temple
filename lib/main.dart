@@ -4,7 +4,7 @@ import 'firebase_options.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 // Custom Files
 import './screens/home_screen.dart';
 import 'theme/theme.dart';
@@ -15,11 +15,17 @@ import 'package:church/screens/temple_list_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.removeAfter(initialization);
+
+  runApp(MyApp());
+}
+
+void initialization(BuildContext context) async {
+  // Initialize setting while splash screen is running
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await dotenv.load(fileName: ".env");
-  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -42,10 +48,9 @@ class MyApp extends StatelessWidget {
   }
 
   final _router = GoRouter(routes: [
-    GoRoute(
-      path: "/",
-      builder: (ctx, state) => const HomeScreen(),
-    ),
+    GoRoute(path: "/", builder: (ctx, state) => HomeScreen()
+        // builder: (ctx, state) => const HomeScreen(),
+        ),
     GoRoute(
       path: "/events-list",
       name: 'eventsListScreen',

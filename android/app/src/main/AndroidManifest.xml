@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.example.church">
-    <application android:label="church" android:name="${applicationName}" android:icon="@mipmap/ic_launcher">
+    <application android:label="church" android:name="${applicationName}" android:icon="@mipmap/launcher_icon">
         <!-- For google maps api key -->
         <!-- <meta-data android:name="com.google.android.geo.API_KEY" android:value="${GMAP_API_KEY}" /> -->
-        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyB9M5cV_KDKWLCqFVaaW9-8E4FJRV2qXZM" />
+        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyDuqIvAuomIj32waIy17ZYHQONzmfk994o" />
 
         <activity android:name=".MainActivity" android:exported="true" android:launchMode="singleTop" android:theme="@style/LaunchTheme" android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode" android:hardwareAccelerated="true" android:windowSoftInputMode="adjustResize">
             <!-- Specifies an Android theme to apply to this Activity as soon as
