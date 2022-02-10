@@ -1,6 +1,4 @@
 import 'package:church/drawer/drawer.dart';
-import 'package:church/screens/events_list_screen.dart';
-import 'package:church/screens/temple_list_screen.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -15,9 +13,12 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Home")),
-      drawer: CustomDrawer(),
+      primary: true,
+      drawer: const CustomDrawer(),
       // body: TempleListScreen(),
-      body: Center(child: Text("Home Page")),
+      body: SafeArea(
+        child: Center(child: Text("Home Page")),
+      ),
     );
   }
 }

@@ -4,11 +4,27 @@ if (localPropertiesFile.exists()) {
     localPropertiesFile.withReader('UTF-8') { reader ->
         localProperties.load(reader)
     }
+
+    
 }
+// Add settings for GMAP API KEY's
+//##########################
+// Fist look at local properties
+// def localPropertyApiToken = localProperties.getProperty('geo.API_KEY')
+// Check system env for production mode
+// def systemEnvApiToken = System.getenv('geo.API_KEY')
+// Define variable to pass on for the ANDROID MANIFEST file
+// def gmapApiKey = localPropertyApiToken 
+
+// if (gmapApiKey == null) {
+//    gmapApiKey = systemEnvApiToken
+// }
+//##########################
+// Ends here
 
 def flutterRoot = localProperties.getProperty('flutter.sdk')
 if (flutterRoot == null) {
-    throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
+    throw new GradleException('Flutter SDK not found. Define location with flutter.sdk in the local.properties file.')
 }
 
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
@@ -42,12 +58,13 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.example.church"
+        applicationId 'com.example.church'
         minSdkVersion 21
-        targetSdkVersion 31
+        targetSdkVersion 30
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        // Add MAps api key
+        // manifestPlaceholders = [GMAP_API_KEY: gmapApiKey]
     }
 
     buildTypes {

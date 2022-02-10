@@ -1,21 +1,24 @@
-import 'package:church/provider/events_provider.dart';
-import 'package:church/provider/temple_provider.dart';
-import 'package:church/screens/events_list_screen.dart';
-import 'package:church/screens/temple_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-//
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+// Custom Files
 import './screens/home_screen.dart';
 import 'theme/theme.dart';
+import 'package:church/provider/events_provider.dart';
+import 'package:church/provider/temple_provider.dart';
+import 'package:church/screens/events_list_screen.dart';
+import 'package:church/screens/temple_list_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await dotenv.load(fileName: ".env");
   runApp(MyApp());
 }
 
@@ -33,6 +36,7 @@ class MyApp extends StatelessWidget {
         routeInformationParser: _router.routeInformationParser,
         routerDelegate: _router.routerDelegate,
         theme: findTemepleTheme,
+        // useInheritedMediaQuery: true,
       ),
     );
   }

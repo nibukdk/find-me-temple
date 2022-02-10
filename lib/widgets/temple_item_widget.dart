@@ -35,8 +35,8 @@ class TempleItemWidget extends StatelessWidget {
               child: Image.asset(
                 imageUrl,
                 fit: BoxFit.cover,
-                width: 200,
-                height: 120,
+                width: 400,
+                height: 150,
               ),
             ),
             Text(

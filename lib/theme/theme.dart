@@ -6,30 +6,33 @@ final ThemeData findTemepleTheme = _findTempleTheme();
 ThemeData _findTempleTheme() {
   final ThemeData base = ThemeData.light();
   return base.copyWith(
-      colorScheme: base.colorScheme.copyWith(
-          primary: const Color.fromARGB(255, 255, 225, 166),
-          secondary: const Color.fromARGB(255, 40, 46, 121),
-          error: Colors.red,
-          onPrimary: Colors.black,
-          onSecondary: Colors.white,
-          background: const Color.fromARGB(255, 255, 225, 166),
-          onBackground: Colors.black),
-      textTheme: _findTempleTextTheme(base.textTheme),
-      // Define styles for elevated button
-      elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all<Color>(
-            const Color.fromARGB(255, 254, 121, 64),
-          ),
-          foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
+    colorScheme: base.colorScheme.copyWith(
+      primary: Colors.amber,
+      primaryContainer: const Color.fromARGB(255, 255, 225, 166),
+      secondary: const Color.fromARGB(255, 40, 46, 121),
+      error: Colors.red,
+      onPrimary: Colors.black,
+      onSecondary: Colors.white,
+      background: const Color.fromARGB(255, 255, 225, 166),
+      onBackground: Colors.black,
+    ),
+    textTheme: _findTempleTextTheme(base.textTheme),
+    // Define styles for elevated button
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all<Color>(
+          const Color.fromARGB(255, 254, 121, 64),
         ),
+        foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
       ),
-      // Define styles for text button
-      textButtonTheme: TextButtonThemeData(
-        style: ButtonStyle(
-          foregroundColor: MaterialStateProperty.all<Color>(Colors.red),
-        ),
-      ));
+    ),
+    // Define styles for text button
+    textButtonTheme: TextButtonThemeData(
+      style: ButtonStyle(
+        foregroundColor: MaterialStateProperty.all<Color>(Colors.red),
+      ),
+    ),
+  );
 }
 
 TextTheme _findTempleTextTheme(TextTheme base) {
