@@ -1,3 +1,5 @@
+import 'package:church/screens/onboarding/onboard_screen_1.dart';
+import 'package:church/screens/onboarding/onboard_screen_2.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -61,5 +63,16 @@ class MyApp extends StatelessWidget {
       name: 'templeListScreen',
       builder: (ctx, state) => const TempleListScreen(),
     ),
+// Oboard Screens
+    GoRoute(
+      path: "/onboard-screen-one",
+      name: 'onboardScreenOne',
+      builder: (ctx, state) => const OnboardScreenOne(),
+    ),
+    GoRoute(
+      path: "/onboard-screen-two",
+      name: 'onboardScreenTwo',
+      builder: (ctx, state) => const OnboardScreenTwo(),
+    )
   ]);
 }

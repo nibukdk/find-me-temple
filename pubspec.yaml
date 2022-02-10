@@ -44,7 +44,6 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
- 
 
 dev_dependencies:
   flutter_test:
@@ -52,7 +51,6 @@ dev_dependencies:
   flutter_lints: ^1.0.0
   build_runner: ^2.1.7
   flutter_launcher_icons: "^0.9.2"
-  
 
 # The following section is specific to Flutter.
 flutter:
@@ -70,9 +68,13 @@ flutter:
     - assets/images/events/img_1.jpg
     - assets/images/events/img_2.jpg
     - assets/images/events/img_4.jpg
+    #icons
     - assets/icons/temple.png
     - assets/icons/temple_small_25x25.png
     - assets/icons/om_icon_25x25.png
+    # Onboarding
+    - assets/onbaord/FindTemples.png
+    - assets/onbaord/FindVenues.png
     # Dot ENV
     - .env
 
@@ -111,16 +113,10 @@ flutter_icons:
   adaptive_icon_background: "#FFD1A6"
   adaptive_icon_foreground: "assets/splash/om_lotus_splash.png"
 
-
-
 ####Splash Screen Settings
 flutter_native_splash:
   # background_image: "assets/splash/om_splash.png"
   background_image: "assets/splash/om_lotus_splash.png"
-  
-
-
-  
 
   # color or background_image is the only required parameter.  Use color to set the background
   # of your splash screen to a solid color.  Use background_image to set the background of your
@@ -190,8 +186,8 @@ flutter_native_splash:
   #       WidgetsFlutterBinding.ensureInitialized();
   #       SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom, SystemUiOverlay.top]);
   #fullscreen: true
-  
-  # If you have changed the name(s) of your info.plist file(s), you can specify the filename(s) 
+
+  # If you have changed the name(s) of your info.plist file(s), you can specify the filename(s)
   # with the info_plist_files parameter.  Remove only the # characters in the three lines below,
   # do not remove any spaces:
   #info_plist_files:

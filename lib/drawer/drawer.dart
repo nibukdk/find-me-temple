@@ -58,6 +58,26 @@ class _CustomDrawerState extends State<CustomDrawer> {
             title: const Text('Temples'),
             onTap: () => GoRouter.of(context).goNamed('templeListScreen'),
           ),
+          ListTile(
+            leading: Icon(
+              Icons.run_circle,
+              color: Colors.red,
+            ),
+            title: Text(
+              'Onboard Screen One',
+            ),
+            onTap: () => GoRouter.of(context).goNamed('onboardScreenOne'),
+          ),
+          ListTile(
+            leading: Icon(
+              Icons.run_circle,
+              color: Colors.red,
+            ),
+            title: Text(
+              'Onboard Screen Two',
+            ),
+            onTap: () => GoRouter.of(context).goNamed('onboardScreenTwo'),
+          ),
         ],
       ),
     );

@@ -7,7 +7,7 @@ ThemeData _findTempleTheme() {
   final ThemeData base = ThemeData.light();
   return base.copyWith(
     colorScheme: base.colorScheme.copyWith(
-      primary: Colors.amber,
+      primary: const Color.fromARGB(255, 255, 209, 166),
       primaryContainer: const Color.fromARGB(255, 255, 225, 166),
       secondary: const Color.fromARGB(255, 40, 46, 121),
       error: Colors.red,
