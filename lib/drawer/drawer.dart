@@ -1,3 +1,4 @@
+import 'package:church/models/route_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -31,24 +32,26 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 textAlign: TextAlign.center,
               )),
           ListTile(
-            leading: Icon(
+            leading: const Icon(
               Icons.home,
               color: Colors.red,
             ),
-            title: Text(
+            title: const Text(
               'Home',
             ),
-            onTap: () => GoRouter.of(context).go('/'),
+            onTap: () =>
+                GoRouter.of(context).pushNamed(APP_PAGE.home.routeName),
           ),
           ListTile(
-            leading: Icon(
+            leading: const Icon(
               Icons.event,
               color: Colors.red,
             ),
             title: Text(
               'Event',
             ),
-            onTap: () => GoRouter.of(context).goNamed('eventsListScreen'),
+            onTap: () =>
+                GoRouter.of(context).goNamed(APP_PAGE.events.routeName),
           ),
           ListTile(
             leading: Image.asset(
@@ -56,27 +59,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
               fit: BoxFit.cover,
             ),
             title: const Text('Temples'),
-            onTap: () => GoRouter.of(context).goNamed('templeListScreen'),
-          ),
-          ListTile(
-            leading: Icon(
-              Icons.run_circle,
-              color: Colors.red,
-            ),
-            title: Text(
-              'Onboard Screen One',
-            ),
-            onTap: () => GoRouter.of(context).goNamed('onboardScreenOne'),
-          ),
-          ListTile(
-            leading: Icon(
-              Icons.run_circle,
-              color: Colors.red,
-            ),
-            title: Text(
-              'Onboard Screen Two',
-            ),
-            onTap: () => GoRouter.of(context).goNamed('onboardScreenTwo'),
+            onTap: () =>
+                GoRouter.of(context).goNamed(APP_PAGE.temples.routeName),
           ),
         ],
       ),

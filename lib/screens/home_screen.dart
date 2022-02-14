@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 // Custom File
@@ -29,7 +28,6 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(title: const Text("Home")),
       primary: true,
       drawer: const CustomDrawer(),
-      // body: TempleListScreen(),
       body: GoogleMap(
         initialCameraPosition: CameraPosition(
           target: center,

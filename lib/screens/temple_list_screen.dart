@@ -10,11 +10,11 @@ class TempleListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final templeList = Provider.of<TempleProvider>(context).getTemples;
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(title: const Text("Temples Near You")),
-        drawer: const CustomDrawer(),
-        body: SizedBox(
+    return Scaffold(
+      appBar: AppBar(title: const Text("Temples Near You")),
+      drawer: const CustomDrawer(),
+      body: SafeArea(
+        child: SizedBox(
           width: 400,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
