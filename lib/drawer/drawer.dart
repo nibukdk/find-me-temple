@@ -62,6 +62,16 @@ class _CustomDrawerState extends State<CustomDrawer> {
             onTap: () =>
                 GoRouter.of(context).goNamed(APP_PAGE.temples.routeName),
           ),
+          ListTile(
+            leading: const Icon(
+              Icons.login,
+              color: Colors.red,
+            ),
+            title: Text(
+              'Login/Register',
+            ),
+            onTap: () => GoRouter.of(context).goNamed(APP_PAGE.auth.routeName),
+          ),
         ],
       ),
     );

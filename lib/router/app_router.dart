@@ -1,5 +1,6 @@
 import 'package:church/provider/app_state_provider.dart';
 import 'package:church/models/route_utils.dart';
+import 'package:church/screens/auth/authentication_screen.dart';
 import 'package:church/screens/events_list_screen.dart';
 import 'package:church/screens/home_screen.dart';
 import 'package:church/screens/onboarding/onboard_screen.dart';
@@ -37,12 +38,19 @@ class AsthaAppRouter {
         // Oboard Screens
         GoRoute(
           path: APP_PAGE.onboarding.routeString,
-          name: APP_PAGE.onboarding.routeString,
+          name: APP_PAGE.onboarding.routeName,
           builder: (ctx, state) => const OnboardScreen(),
+        ),
+
+        // Auth Screen
+        GoRoute(
+          path: APP_PAGE.auth.routeString,
+          name: APP_PAGE.auth.routeName,
+          builder: (ctx, state) => const AuthScreen(),
         ),
       ],
       redirect: (state) {
-        final onboardLoc = state.namedLocation(APP_PAGE.onboarding.routeString);
+        final onboardLoc = state.namedLocation(APP_PAGE.onboarding.routeName);
         final homeLoc = state.namedLocation(APP_PAGE.home.routeName);
 
         // to only onboard if display count is non null
@@ -54,11 +62,13 @@ class AsthaAppRouter {
 
         if (isInitiazed || toOnboard) {
           onBoardDisplayCount = 0;
-
-          return APP_PAGE.onboarding.routeName;
+          // return APP_PAGE.onboarding.routeName;
+          return onboardLoc;
         }
         if (isInitiazed && !toOnboard) {
-          return APP_PAGE.home.routeName;
+          // return APP_PAGE.home.routeName;
+
+          return homeLoc;
         }
       });
 }

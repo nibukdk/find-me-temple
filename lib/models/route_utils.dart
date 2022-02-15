@@ -1,7 +1,7 @@
 enum APP_PAGE {
   // splash,
   onboarding,
-  login,
+  auth,
   home,
   error,
   events,
@@ -22,8 +22,8 @@ extension AppPageExtension on APP_PAGE {
       case APP_PAGE.onboarding:
         return "/onboarding";
 
-      case APP_PAGE.login:
-        return "/login";
+      case APP_PAGE.auth:
+        return "/auth";
 
       // case APP_PAGE.splash:
       //   return "/splash";
@@ -54,8 +54,8 @@ extension AppPageExtension on APP_PAGE {
       case APP_PAGE.onboarding:
         return "ONBOARDING";
 
-      case APP_PAGE.login:
-        return "LOGIN";
+      case APP_PAGE.auth:
+        return "AUTH";
 
       // case APP_PAGE.splash:
       //   return "SPLASH";
@@ -85,13 +85,10 @@ extension AppPageExtension on APP_PAGE {
         return "An Error Occured";
 
       case APP_PAGE.onboarding:
-        return "Onboarding";
+        return "Welcome To Astha ";
 
-      case APP_PAGE.login:
-        return "Login ";
-
-      // case APP_PAGE.splash:
-      //   return "Splash";
+      case APP_PAGE.auth:
+        return "Authenticate ";
 
       case APP_PAGE.events:
         return "Events Near You";

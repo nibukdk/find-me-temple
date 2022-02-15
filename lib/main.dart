@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'firebase_options.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -17,15 +17,16 @@ import 'package:church/router/app_router.dart';
 int? onBoardDisplayCount;
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   // Splash Native Screen
   FlutterNativeSplash.removeAfter(initialization);
   // Share Prefrences
-  WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   onBoardDisplayCount = prefs.getInt('onBoardKey');
   // TaskBar background
   SystemChrome.setSystemUIOverlayStyle(
-    SystemUiOverlayStyle.dark.copyWith(statusBarColor: Colors.transparent),
+    SystemUiOverlayStyle.dark.copyWith(statusBarColor: Colors.black38),
   );
   runApp(MyApp(prefs: prefs));
 }
@@ -36,6 +37,7 @@ void initialization(BuildContext context) async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
   // Flutter DotEnv settings
   await dotenv.load(fileName: ".env");
 }
