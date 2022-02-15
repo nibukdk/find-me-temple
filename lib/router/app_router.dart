@@ -1,6 +1,6 @@
+import 'package:church/auth/authentication_screen.dart';
 import 'package:church/provider/app_state_provider.dart';
 import 'package:church/models/route_utils.dart';
-import 'package:church/screens/auth/authentication_screen.dart';
 import 'package:church/screens/events_list_screen.dart';
 import 'package:church/screens/home_screen.dart';
 import 'package:church/screens/onboarding/onboard_screen.dart';

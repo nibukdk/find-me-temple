@@ -1,6 +1,6 @@
 import 'package:church/drawer/drawer.dart';
 import 'package:church/models/route_utils.dart';
-import 'package:church/widgets/auth_form_widget.dart';
+import 'package:church/auth/auth_form_widget.dart';
 import 'package:flutter/material.dart';
 
 class AuthScreen extends StatefulWidget {
@@ -21,7 +21,7 @@ class _AuthScreenState extends State<AuthScreen> {
           onTap: () => FocusScope.of(context).unfocus(),
           child: SingleChildScrollView(
             child: SizedBox(
-              height: MediaQuery.of(context).size.height * 0.9,
+              // height: MediaQuery.of(context).size.height * 0.9,
               width: double.infinity,
               child: Column(children: [
                 Padding(

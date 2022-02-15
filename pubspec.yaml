@@ -43,6 +43,7 @@ dependencies:
   introduction_screen: ^2.1.0
   shared_preferences: ^2.0.13
   flutter_native_splash: ^2.0.2
+  # firebase_analytics: ^9.1.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -82,7 +83,11 @@ flutter:
     - assets/onboard/FindTemples.png
     - assets/onboard/FindVenues.png
     - assets/onboard/quote_footer.png
-    # Dot ENV
+    # Auth Form Image
+    - assets/AuthScreen/WelcomeScreenImage.png
+    - assets/AuthScreen/WelcomeScreenImage_landscape.png
+    - assets/AuthScreen/WelcomeScreenImage_landscape_2.png
+    # Dot ENVA
     - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see
