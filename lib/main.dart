@@ -1,3 +1,4 @@
+import 'package:church/auth/firebase_authentication.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -9,8 +10,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 // Custom Files
 import 'theme/theme.dart';
-import 'package:church/provider/events_provider.dart';
-import 'package:church/provider/temple_provider.dart';
+import 'package:church/provider/events_state_provider.dart';
+import 'package:church/provider/temple_state_provider.dart';
 import 'package:church/provider/app_state_provider.dart';
 import 'package:church/router/app_router.dart';
 
@@ -61,12 +62,6 @@ class _MyAppState extends State<MyApp> {
     super.initState();
   }
 
-  // @override
-  // void didChangeDependencies() {
-  //   _appStateProvider = AppStateProvider(prefs: widget.prefs);
-  //   super.didChangeDependencies();
-  // }
-
   @override
   Widget build(BuildContext context) {
     // print(toOnBoard);
@@ -80,6 +75,9 @@ class _MyAppState extends State<MyApp> {
         ),
         ChangeNotifierProvider<AppStateProvider>(
             create: (_) => _appStateProvider),
+        ChangeNotifierProvider(
+            create: (BuildContext context) =>
+                FirebaseAuthenticationProvider(context)),
         Provider<AsthaAppRouter>(
             create: (_) => AsthaAppRouter(
                 _appStateProvider, widget.prefs, onBoardDisplayCount))

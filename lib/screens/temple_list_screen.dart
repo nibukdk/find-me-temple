@@ -1,5 +1,5 @@
 import 'package:church/drawer/drawer.dart';
-import 'package:church/provider/temple_provider.dart';
+import 'package:church/provider/temple_state_provider.dart';
 import 'package:church/widgets/temple_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

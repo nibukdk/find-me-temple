@@ -1,5 +1,5 @@
 import 'package:church/drawer/drawer.dart';
-import 'package:church/provider/events_provider.dart';
+import 'package:church/provider/events_state_provider.dart';
 import 'package:church/widgets/event_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

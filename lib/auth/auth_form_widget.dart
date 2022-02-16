@@ -1,32 +1,10 @@
-import 'package:church/auth/auth_input_widget.dart';
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-enum AuthMode { signin, register }
-
-extension AuthModeExtension on AuthMode {
-  String get titleText {
-    switch (this) {
-      case AuthMode.register:
-        return "Already Have an account?";
-
-      case AuthMode.signin:
-        return "Don't have an account yet?";
-      default:
-        return "Don't have an account yet?";
-    }
-  }
-
-  String get linkText {
-    switch (this) {
-      case AuthMode.register:
-        return "Sign In";
-      case AuthMode.signin:
-        return "Register";
-      default:
-        return "Register";
-    }
-  }
-}
+import 'package:church/auth/auth_input_widget.dart';
+import 'package:church/auth/auth_utils.dart';
+import 'package:church/auth/auth_validator.dart';
 
 class AuthFormWidget extends StatefulWidget {
   const AuthFormWidget({Key? key}) : super(key: key);
@@ -36,6 +14,9 @@ class AuthFormWidget extends StatefulWidget {
 }
 
 class _AuthFormWidgetState extends State<AuthFormWidget> {
+  // Instantiate validator
+  final AuthValidators authValidator = AuthValidators();
+
   // Define Form key
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   // controllers
@@ -49,17 +30,8 @@ class _AuthFormWidgetState extends State<AuthFormWidget> {
   late FocusNode confirmPasswordFocusNode;
 
   bool obscureText = true;
-
   bool registerAuthMode = true;
-
-  // bool _isEmailValid = false;
-  // bool _isPasswordValid = false;
-
-  static const String emailErrMsg =
-      "Invlid Email Address, Please provide a valid email.";
-  static const String passwordErrMsg =
-      "Password must have atleast 6 characters.";
-  static const String confirmPasswordErrMsg = "Two passwords don't match.";
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -87,50 +59,52 @@ class _AuthFormWidgetState extends State<AuthFormWidget> {
     });
   }
 
-  // A simple email validator that  checks presence and position of @
-  String? emailValidator(String? val) {
-    final String email = val as String;
-
-    // If length of email is <=3 then its invlaid
-    if (email.length <= 3) return emailErrMsg;
-
-    // Validation related to @
-    final hasAtSymbol = email.contains('@');
-    final indexOfAt = email.indexOf('@');
-    // Check number of @
-    final numberOfAt = "@".allMatches(email).length;
-
-    // Valid if has @
-    // also @ is not first or last character
-    // also if number of @ is only 1
-
-    if (!hasAtSymbol) return emailErrMsg;
-    if (numberOfAt != 1) return emailErrMsg;
-    if (indexOfAt == email.length - 1 || indexOfAt == 0) return emailErrMsg;
-
-    return null;
+// Create a scaffold messanger
+  SnackBar msgPopUp(msg) {
+    return SnackBar(
+        content: Text(
+      msg,
+      textAlign: TextAlign.center,
+    ));
   }
 
-  String? passwordVlidator(String? val) {
-    final String password = val as String;
+  Future<void> _submitForm() async {
+    final isValid = _formKey.currentState!.validate();
 
-    if (password.isEmpty || password.length <= 5) return passwordErrMsg;
+    if (isValid) {
+      // Save current state if form is valid
+      _formKey.currentState!.save();
 
-    return null;
-  }
-
-  String? confirmPasswordValidator(String? val) {
-    final String firstPassword = passwordController.text;
-    final String secondPassword = val as String;
-    if (firstPassword.isEmpty ||
-        secondPassword.isEmpty ||
-        firstPassword.length != secondPassword.length) {
-      return confirmPasswordErrMsg;
+      // Try Sigin Or Register
+      try {
+        // Activate circular progress indicator
+        setState(() => _isLoading = true);
+        if (registerAuthMode) {
+          UserCredential userCredential =
+              await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: emailController.text.trim(),
+            password: passwordController.text.trim(),
+          );
+          ScaffoldMessenger.of(context)
+              .showSnackBar(msgPopUp("The account has been registered."));
+        } else {
+          UserCredential userCredential =
+              await FirebaseAuth.instance.signInWithEmailAndPassword(
+            email: emailController.text.trim(),
+            password: passwordController.text.trim(),
+          );
+        }
+      } on FirebaseAuthException catch (e) {
+        if (e.code == "email-already-in-use") {
+          ScaffoldMessenger.of(context).showSnackBar(
+              msgPopUp("The account already exists for that email"));
+        }
+        setState(() => _isLoading = false);
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(msgPopUp(e.toString()));
+        setState(() => _isLoading = false);
+      }
     }
-
-    if (firstPassword != secondPassword) return confirmPasswordErrMsg;
-
-    return null;
   }
 
   @override
@@ -143,11 +117,11 @@ class _AuthFormWidgetState extends State<AuthFormWidget> {
           children: [
             TextFormFieldWidget(
               controller: emailController,
-              obscureText: obscureText,
+              obscureText: false,
               focusNode: emailFocusNode,
               toggleObscureText: toggleObscureText,
-              validator: emailValidator,
-              prefIcon: Icon(Icons.mail),
+              validator: authValidator.emailValidator,
+              prefIcon: const Icon(Icons.mail),
               labelText: "Enter Email Address",
               textInputAction: TextInputAction.next,
               isEmailTextField: true,
@@ -162,8 +136,8 @@ class _AuthFormWidgetState extends State<AuthFormWidget> {
               obscureText: obscureText,
               focusNode: passwordFocusNode,
               toggleObscureText: toggleObscureText,
-              validator: passwordVlidator,
-              prefIcon: Icon(Icons.password),
+              validator: authValidator.passwordVlidator,
+              prefIcon: const Icon(Icons.password),
               textInputAction: TextInputAction.done,
               isEmailTextField: false,
             ),
@@ -172,12 +146,9 @@ class _AuthFormWidgetState extends State<AuthFormWidget> {
               height: 20,
             ),
 
-            const SizedBox(
-              height: 20,
-            ),
             AnimatedContainer(
               duration: const Duration(milliseconds: 500),
-              height: registerAuthMode ? 60 : 0,
+              height: registerAuthMode ? 80 : 0,
               child: AnimatedOpacity(
                   duration: const Duration(milliseconds: 500),
                   opacity: registerAuthMode ? 1 : 0,
@@ -187,11 +158,15 @@ class _AuthFormWidgetState extends State<AuthFormWidget> {
                     isEmailTextField: false,
                     labelText: "Confirm Password",
                     obscureText: obscureText,
-                    prefIcon: Icon(Icons.password),
+                    prefIcon: const Icon(Icons.password),
                     textInputAction: TextInputAction.done,
                     toggleObscureText: toggleObscureText,
-                    validator: confirmPasswordValidator,
+                    validator: (val) => authValidator.confirmPasswordValidator(
+                        val, passwordController.text),
                   )),
+            ),
+            const SizedBox(
+              height: 20,
             ),
             AnimatedOpacity(
               opacity: registerAuthMode ? 1 : 0,
@@ -200,27 +175,27 @@ class _AuthFormWidgetState extends State<AuthFormWidget> {
                 height: 20,
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TextButton(
-                  onPressed: () {},
-                  child: const Text('Cancel'),
-                ),
-                const SizedBox(
-                  width: 20,
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    _formKey.currentState!.validate();
-                  },
-                  child: Text(registerAuthMode ? 'Register' : 'Sign In'),
-                  style: ButtonStyle(
-                    elevation: MaterialStateProperty.all(8.0),
+            if (_isLoading) const CircularProgressIndicator(),
+            if (!_isLoading)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () {},
+                    child: const Text('Cancel'),
                   ),
-                ),
-              ],
-            ),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  ElevatedButton(
+                    onPressed: _submitForm,
+                    child: Text(registerAuthMode ? 'Register' : 'Sign In'),
+                    style: ButtonStyle(
+                      elevation: MaterialStateProperty.all(8.0),
+                    ),
+                  ),
+                ],
+              ),
             const SizedBox(
               height: 20,
             ),
@@ -245,65 +220,3 @@ class _AuthFormWidgetState extends State<AuthFormWidget> {
     );
   }
 }
-
-
-//  TextFormField(
-//               controller: emailController,
-//               decoration: const InputDecoration(
-//                 border: OutlineInputBorder(
-//                   borderRadius: BorderRadius.all(Radius.circular(10.0)),
-//                 ),
-//                 label: Text("Enter Email Address"),
-//                 prefixIcon: Icon(Icons.mail),
-//               ),
-//               focusNode: emailFocusNode,
-//               textInputAction: TextInputAction.next,
-//               validator: emailValidator,
-//               // onSaved: emailValidator,
-//             ),
-
-   //
-            // TextFormField(
-            //   controller: passwordController,
-            //   decoration: InputDecoration(
-            //     border: const OutlineInputBorder(
-            //       borderRadius: BorderRadius.all(Radius.circular(10.0)),
-            //     ),
-            //     label: const Text("Enter Password"),
-            //     prefixIcon: const Icon(Icons.password),
-            //     suffixIcon: IconButton(
-            //       onPressed: toggleObscureText,
-            //       icon: obscureText
-            //           ? const Icon(Icons.visibility)
-            //           : const Icon(Icons.visibility_off),
-            //     ),
-            //   ),
-            //   focusNode: passwordFocusNode,
-            //   textInputAction: TextInputAction.done,
-            //   obscureText: obscureText,
-            //   validator: passwordVlidator,
-            //   // onSaved: passwordVlidator,
-            // ),
-
-
-            // TextFormField(
-            //       controller: confirmPasswordController,
-            //       decoration: InputDecoration(
-            //         border: const OutlineInputBorder(
-            //           borderRadius: BorderRadius.all(Radius.circular(10.0)),
-            //         ),
-            //         label: const Text("Confirm Password"),
-            //         prefixIcon: const Icon(Icons.password),
-            //         suffixIcon: IconButton(
-            //           onPressed: toggleObscureText,
-            //           icon: obscureText
-            //               ? const Icon(Icons.visibility)
-            //               : const Icon(Icons.visibility_off),
-            //         ),
-            //       ),
-            //       focusNode: confirmPasswordFocusNode,
-            //       textInputAction: TextInputAction.done,
-            //       obscureText: obscureText,
-            //       validator: confirmPasswordValidator,
-            //       // onSaved: passwordVlidator,
-            //     ),
