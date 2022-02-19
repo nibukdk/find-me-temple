@@ -1,16 +1,15 @@
+import 'dart:async';
+
+import 'package:church/auth/auth_state_provider.dart';
 import 'package:church/drawer/drawer.dart';
 import 'package:church/models/route_utils.dart';
 import 'package:church/auth/auth_form_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class AuthScreen extends StatefulWidget {
+class AuthScreen extends StatelessWidget {
   const AuthScreen({Key? key}) : super(key: key);
 
-  @override
-  _AuthScreenState createState() => _AuthScreenState();
-}
-
-class _AuthScreenState extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,7 +30,11 @@ class _AuthScreenState extends State<AuthScreen> {
                     fit: BoxFit.fill,
                   ),
                 ),
-                const AuthFormWidget()
+                Consumer<AuthStateProvider>(
+                    builder: (context, authState, _) => AuthFormWidget(
+                        register: authState.registerAccount,
+                        signIn: authState.signInWithEmailAndPassword,
+                        signOut: authState.signOut)),
               ]),
             ),
           ),

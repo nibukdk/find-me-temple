@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'package:church/auth/auth_state_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 // import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 // String loginKey = dotenv.env['LOGIN_KEY'] as String;
@@ -10,31 +12,22 @@ String onBoardKey = 'NVsyZxuJ4U';
 
 class AppStateProvider extends ChangeNotifier {
   late final SharedPreferences prefs;
-
-  AppStateProvider({required this.prefs});
-
-  final StreamController<bool> _loginStateChanges =
-      StreamController<bool>.broadcast();
+  bool authState;
+  AppStateProvider({required this.prefs, required this.authState});
 
   // Create variables for different states
   bool _isLoggedInState = false;
   bool _isInitializedState = false;
   bool _isOnboadingState = false;
-
   // Create getters
-  bool get getIdLoggedInState => _isLoggedInState;
+  bool get getIsLoggedInState => _isLoggedInState;
   bool get getIsInitializedState => _isInitializedState;
   bool get getIsOnboadingState => _isOnboadingState;
-  Stream<bool> get loginStateChanges => _loginStateChanges.stream;
 
   // Create Setter for login
   set setIsLoggedInState(bool val) {
-    prefs.setBool(loginKey, val);
     //change is loggedin val
     _isLoggedInState = val;
-
-    // change loggedin strem values
-    _loginStateChanges.add(val);
     notifyListeners();
   }
 
@@ -47,6 +40,18 @@ class AppStateProvider extends ChangeNotifier {
 
   set setIsOnboardingState(bool val) {
     _isOnboadingState = val;
+    notifyListeners();
+  }
+
+  Future<void> login() async {
+    _isLoggedInState = true;
+
+    notifyListeners();
+  }
+
+  Future<void> logout() async {
+    _isLoggedInState = false;
+    prefs.setBool(loginKey, false);
     notifyListeners();
   }
 }

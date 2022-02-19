@@ -1,6 +1,8 @@
+import 'package:church/auth/auth_state_provider.dart';
 import 'package:church/models/route_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class CustomDrawer extends StatefulWidget {
   const CustomDrawer({Key? key}) : super(key: key);
@@ -12,6 +14,8 @@ class CustomDrawer extends StatefulWidget {
 class _CustomDrawerState extends State<CustomDrawer> {
   @override
   Widget build(BuildContext context) {
+    final authState = Provider.of<AuthStateProvider>(context);
+    print(authState.appState);
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -47,7 +51,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
               Icons.event,
               color: Colors.red,
             ),
-            title: Text(
+            title: const Text(
               'Event',
             ),
             onTap: () =>
@@ -63,15 +67,22 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 GoRouter.of(context).goNamed(APP_PAGE.temples.routeName),
           ),
           ListTile(
-            leading: const Icon(
-              Icons.login,
-              color: Colors.red,
-            ),
-            title: Text(
-              'Login/Register',
-            ),
-            onTap: () => GoRouter.of(context).goNamed(APP_PAGE.auth.routeName),
-          ),
+              leading: Icon(
+                authState.appState == AUTH_STATE.loggedIn
+                    ? Icons.logout
+                    : Icons.login,
+                color: Colors.red,
+              ),
+              title: Text(
+                authState.appState == AUTH_STATE.loggedIn
+                    ? 'Logout'
+                    : 'Login/Register',
+              ),
+              onTap: () {
+                authState.appState == AUTH_STATE.loggedIn
+                    ? authState.signOut()
+                    : GoRouter.of(context).goNamed(APP_PAGE.auth.routeName);
+              }),
         ],
       ),
     );

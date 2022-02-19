@@ -3,14 +3,16 @@ import 'package:church/models/temple.dart';
 
 class UserAuthModel {
   final String emailId;
-  final String password;
+  final String username;
+  final String userId;
   // final UserProfileModel userProfile;
 
   const UserAuthModel(
       // this.userProfile,
       {
     required this.emailId,
-    required this.password,
+    required this.username,
+    required this.userId,
   });
 }
 

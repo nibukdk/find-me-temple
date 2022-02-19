@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'package:church/auth/auth_state_provider.dart';
 import 'package:church/provider/app_state_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:church/auth/auth_input_widget.dart';
 import 'package:church/auth/auth_utils.dart';
@@ -9,16 +9,7 @@ import 'package:church/auth/auth_validator.dart';
 import 'package:provider/provider.dart';
 
 class AuthFormWidget extends StatefulWidget {
-  late Function register;
-  late Function signIn;
-  VoidCallback signOut;
-
-  AuthFormWidget(
-      {required this.register,
-      required this.signIn,
-      required this.signOut,
-      Key? key})
-      : super(key: key);
+  const AuthFormWidget({Key? key}) : super(key: key);
 
   @override
   _AuthFormWidgetState createState() => _AuthFormWidgetState();
@@ -83,49 +74,86 @@ class _AuthFormWidgetState extends State<AuthFormWidget> {
     ));
   }
 
-  registerErrorCallback(e) {
-    if (e.code == "email-already-in-use") {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(msgPopUp("The account already exists for that email"));
-    }
-    setState(() => _isLoading = false);
-  }
+  Future<void> _submitForm(BuildContext context) async {
+    final isValid = _formKey.currentState!.validate();
 
-  signInErrorCallback(e) {
-    if (e.code == 'user-not-found') {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(msgPopUp('No user found for that email.'));
-    }
-    if (e.code == 'wrong-password') {
-      ScaffoldMessenger.of(context).showSnackBar(msgPopUp('Wrong password.'));
-    }
-  }
-
-  Future<void> _submitForm(BuildContext context, AuthStateProvider authState,
-      AppStateProvider appState) async {
-    final email = emailController.text.trim();
-    final password = passwordController.text.trim();
-    final username = usernameController.text.trim();
-
-    bool isFormValid = _formKey.currentState!.validate();
-    setState(() => _isLoading = false);
-    if (isFormValid) {
+    String username = usernameController.text;
+    if (isValid) {
+      // Save current state if form is valid
       _formKey.currentState!.save();
 
+      // Try Sigin Or Register
+      setState(() => _isLoading = true);
+
       if (registerAuthMode) {
-        await authState.registerAccount(
-            email, username, password, registerErrorCallback);
+        // setState(() => _isLoading = true);
+
+        try {
+          UserCredential credential =
+              await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: emailController.text.trim(),
+            password: passwordController.text.trim(),
+          );
+          if (username.isNotEmpty) {
+            await credential.user!.updateDisplayName(username);
+          }
+          //  appStateProvider.appState(userCredential.user.);
+          // await Provider.of<AppStateProvider>(context)
+          //     .prefs
+          //     .setBool('loginKey', true);
+          await Provider.of<AppStateProvider>(context).login();
+
+          ScaffoldMessenger.of(context)
+              .showSnackBar(msgPopUp("The account has been registered."));
+
+          // GoRouter.of(context).go("/");
+        } on FirebaseAuthException catch (e) {
+          if (e.code == "email-already-in-use") {
+            ScaffoldMessenger.of(context).showSnackBar(
+                msgPopUp("The account already exists for that email"));
+          }
+          setState(() => _isLoading = false);
+        } catch (e) {
+          ScaffoldMessenger.of(context).showSnackBar(msgPopUp(e.toString()));
+          setState(() => _isLoading = false);
+        }
       } else {
-        await authState.signInWithEmailAndPassword(
-            email, password, signInErrorCallback);
+        // Sigin IN
+        try {
+          UserCredential credential =
+              await FirebaseAuth.instance.signInWithEmailAndPassword(
+            email: emailController.text.trim(),
+            password: passwordController.text.trim(),
+          );
+
+          ScaffoldMessenger.of(context).showSnackBar(msgPopUp("Welcome Back"));
+          await Provider.of<AppStateProvider>(context)
+              .prefs
+              .setBool('loginKey', true);
+
+          // GoRouter.of(context).go("/");
+        } on FirebaseAuthException catch (e) {
+          if (e.code == 'user-not-found') {
+            ScaffoldMessenger.of(context)
+                .showSnackBar(msgPopUp('No user found for that email.'));
+          }
+          if (e.code == 'wrong-password') {
+            ScaffoldMessenger.of(context)
+                .showSnackBar(msgPopUp('Wrong password.'));
+          }
+          setState(() => _isLoading = false);
+        } catch (e) {
+          ScaffoldMessenger.of(context).showSnackBar(msgPopUp(e.toString()));
+          setState(() => _isLoading = false);
+        }
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final authStateProvider = Provider.of<AuthStateProvider>(context);
-    final appStateProvider = Provider.of<AppStateProvider>(context);
+    // final appStateProvider = Provider.of<AppStateProvider>(context,list);
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Form(
@@ -231,8 +259,7 @@ class _AuthFormWidgetState extends State<AuthFormWidget> {
                     width: 20,
                   ),
                   ElevatedButton(
-                    onPressed: () => _submitForm(
-                        context, authStateProvider, appStateProvider),
+                    onPressed: () => _submitForm(context),
                     child: Text(registerAuthMode ? 'Register' : 'Sign In'),
                     style: ButtonStyle(
                       elevation: MaterialStateProperty.all(8.0),

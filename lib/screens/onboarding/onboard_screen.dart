@@ -1,7 +1,10 @@
+import 'package:church/auth/auth_state_provider.dart';
+import 'package:church/provider/app_state_provider.dart';
 import 'package:church/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:introduction_screen/introduction_screen.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class OnboardScreen extends StatefulWidget {
@@ -24,7 +27,15 @@ class _OnboardScreenState extends State<OnboardScreen> {
   }
 
   void _onIntroEnd(context) {
+    final authStateProvider = Provider.of<AuthStateProvider>(context);
+    bool authState = authStateProvider.appState == AUTH_STATE.loggedIn;
+    AppStateProvider appStateProvider =
+        AppStateProvider(prefs: prefs, authState: authState);
+
     prefs.setInt('onBoardKey', 0);
+    // if (appStateProvider.getIsLoggedInState) GoRouter.of(context).go("/");
+    // if (!appStateProvider.getIsLoggedInState) GoRouter.of(context).go("/auth");
+    // appStateProvider.appLoginState(userToken)
     GoRouter.of(context).go("/");
   }
 

@@ -19,7 +19,7 @@ class TextFormFieldWidget extends StatelessWidget {
   final bool isEmailTextField;
 
   final TextEditingController controller;
-  final VoidCallback toggleObscureText;
+  final VoidCallback? toggleObscureText;
   final bool obscureText;
   final FocusNode focusNode;
   final String? Function(String?)? validator;

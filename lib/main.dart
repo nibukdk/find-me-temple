@@ -1,9 +1,10 @@
-import 'package:church/auth/firebase_authentication.dart';
+import 'package:church/auth/auth_state_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'firebase_options.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -19,34 +20,38 @@ int? onBoardDisplayCount;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  // Splash Native Screen
-  FlutterNativeSplash.removeAfter(initialization);
-  // Share Prefrences
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  onBoardDisplayCount = prefs.getInt('onBoardKey');
-  // TaskBar background
-  SystemChrome.setSystemUIOverlayStyle(
-    SystemUiOverlayStyle.dark.copyWith(statusBarColor: Colors.black38),
-  );
-  runApp(MyApp(prefs: prefs));
-}
 
-// Initialization for flutter native spalsh
-void initialization(BuildContext context) async {
-  // Firebase intialization
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
   // Flutter DotEnv settings
   await dotenv.load(fileName: ".env");
+
+  // Share Prefrences
+  onBoardDisplayCount = prefs.getInt('onBoardKey');
+
+  // TaskBar background
+  SystemChrome.setSystemUIOverlayStyle(
+    SystemUiOverlayStyle.dark.copyWith(statusBarColor: Colors.black38),
+  );
+
+  // Firebase auth instance
+  FirebaseAuth.instance.userChanges().listen((user) {
+    if (user != null) {
+      runApp(MyApp(prefs: prefs, authState: true));
+    } else {
+      runApp(MyApp(prefs: prefs, authState: false));
+    }
+  });
 }
 
 class MyApp extends StatefulWidget {
   final SharedPreferences prefs;
-
-  const MyApp({required this.prefs, Key? key}) : super(key: key);
+  final bool authState;
+  const MyApp({required this.prefs, required this.authState, Key? key})
+      : super(key: key);
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -57,9 +62,9 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-    _appStateProvider = AppStateProvider(prefs: widget.prefs);
-
     super.initState();
+    _appStateProvider =
+        AppStateProvider(prefs: widget.prefs, authState: widget.authState);
   }
 
   @override
@@ -67,6 +72,7 @@ class _MyAppState extends State<MyApp> {
     // print(toOnBoard);
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => AuthStateProvider()),
         ChangeNotifierProvider(
           create: (_) => TempleProvider(),
         ),
@@ -75,25 +81,20 @@ class _MyAppState extends State<MyApp> {
         ),
         ChangeNotifierProvider<AppStateProvider>(
             create: (_) => _appStateProvider),
-        ChangeNotifierProvider(
-            create: (BuildContext context) =>
-                FirebaseAuthenticationProvider(context)),
         Provider<AsthaAppRouter>(
-            create: (_) => AsthaAppRouter(
-                _appStateProvider, widget.prefs, onBoardDisplayCount))
+            create: (_) => AsthaAppRouter(_appStateProvider, widget.prefs,
+                onBoardDisplayCount, widget.authState))
       ],
-      child: Builder(
-        builder: (context) {
-          final GoRouter _router = Provider.of<AsthaAppRouter>(context).router;
+      child: Builder(builder: (context) {
+        final GoRouter _router = Provider.of<AsthaAppRouter>(context).router;
 
-          return MaterialApp.router(
-            title: "Astha",
-            routeInformationParser: _router.routeInformationParser,
-            routerDelegate: _router.routerDelegate,
-            theme: findTemepleTheme,
-          );
-        },
-      ),
+        return MaterialApp.router(
+          routeInformationParser: _router.routeInformationParser,
+          routerDelegate: _router.routerDelegate,
+          theme: findTemepleTheme,
+          debugShowCheckedModeBanner: false,
+        );
+      }),
     );
   }
 }
