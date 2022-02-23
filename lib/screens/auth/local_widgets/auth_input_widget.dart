@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 
 class TextFormFieldWidget extends StatelessWidget {
@@ -40,7 +38,7 @@ class TextFormFieldWidget extends StatelessWidget {
         suffixIcon: IconButton(
           onPressed: toggleObscureText,
           icon: isEmailTextField
-              ? Icon(null)
+              ? const Icon(null)
               : obscureText
                   ? const Icon(Icons.visibility)
                   : const Icon(Icons.visibility_off),

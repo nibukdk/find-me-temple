@@ -1,8 +1,6 @@
-import 'package:church/auth/auth_state_provider.dart';
-import 'package:church/models/route_utils.dart';
+import 'package:church/utils/router/router_utlis.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 
 class CustomDrawer extends StatefulWidget {
   const CustomDrawer({Key? key}) : super(key: key);
@@ -14,8 +12,8 @@ class CustomDrawer extends StatefulWidget {
 class _CustomDrawerState extends State<CustomDrawer> {
   @override
   Widget build(BuildContext context) {
-    final authState = Provider.of<AuthStateProvider>(context);
-    print(authState.appState);
+    // final authState = Provider.of<AuthStateProvider>(context);
+    // print(authState.appState);
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -66,23 +64,19 @@ class _CustomDrawerState extends State<CustomDrawer> {
             onTap: () =>
                 GoRouter.of(context).goNamed(APP_PAGE.temples.routeName),
           ),
-          ListTile(
-              leading: Icon(
-                authState.appState == AUTH_STATE.loggedIn
-                    ? Icons.logout
-                    : Icons.login,
-                color: Colors.red,
-              ),
-              title: Text(
-                authState.appState == AUTH_STATE.loggedIn
-                    ? 'Logout'
-                    : 'Login/Register',
-              ),
-              onTap: () {
-                authState.appState == AUTH_STATE.loggedIn
-                    ? authState.signOut()
-                    : GoRouter.of(context).goNamed(APP_PAGE.auth.routeName);
-              }),
+          // ListTile(
+          //     leading: Icon(
+          //       authState.appState == AUTH_STATE.loggedIn
+          //           ? Icons.logout
+          //           : Icons.login,
+          //       color: Colors.red,
+          //     ),
+          //     title: const Text('Logout'),
+          //     onTap: () {
+          //       authState.signOut();
+          //       ScaffoldMessenger.of(context).showSnackBar(
+          //           SnackBar(content: Text("You are now signed out")));
+          //     }),
         ],
       ),
     );

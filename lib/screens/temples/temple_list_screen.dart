@@ -1,18 +1,33 @@
-import 'package:church/drawer/drawer.dart';
-import 'package:church/provider/temple_state_provider.dart';
-import 'package:church/widgets/temple_item_widget.dart';
+import 'package:church/widgets/bottom_nav_bar/bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:church/provider/temple_provider.dart';
+import 'package:church/screens/temples/local_widget/temple_item_widget.dart';
+import 'package:church/widgets/user_drawer/user_drawer.dart';
+
 class TempleListScreen extends StatelessWidget {
-  const TempleListScreen({Key? key}) : super(key: key);
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
     final templeList = Provider.of<TempleProvider>(context).getTemples;
     return Scaffold(
-      appBar: AppBar(title: const Text("Temples Near You")),
-      drawer: const CustomDrawer(),
+      key: _scaffoldKey,
+      drawer: const UserDrawer(),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: const Text("Temples Near You"),
+        actions: [
+          IconButton(
+              // onPressed: () => UserDrawer(),
+              onPressed: () => _scaffoldKey.currentState!.openDrawer(),
+              icon: const Icon(Icons.person))
+        ],
+      ),
+      bottomNavigationBar: BottomNavBar(
+        navItemIndex: 2,
+      ),
       body: SafeArea(
         child: SizedBox(
           width: 400,

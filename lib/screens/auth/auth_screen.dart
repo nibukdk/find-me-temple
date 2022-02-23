@@ -1,11 +1,6 @@
-import 'dart:async';
-
-import 'package:church/auth/auth_state_provider.dart';
-import 'package:church/drawer/drawer.dart';
-import 'package:church/models/route_utils.dart';
-import 'package:church/auth/auth_form_widget.dart';
+import 'package:church/screens/auth/local_widgets/auth_form_widget.dart';
+import 'package:church/utils/router/router_utlis.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class AuthScreen extends StatelessWidget {
   const AuthScreen({Key? key}) : super(key: key);
@@ -14,7 +9,8 @@ class AuthScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(APP_PAGE.auth.routePageTitle)),
-      drawer: const CustomDrawer(),
+      // drawer: const CustomDrawer(),
+      // bottomNavigationBar: const BottomNavBar(),
       body: SafeArea(
         child: GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
@@ -30,11 +26,7 @@ class AuthScreen extends StatelessWidget {
                     fit: BoxFit.fill,
                   ),
                 ),
-                Consumer<AuthStateProvider>(
-                    builder: (context, authState, _) => AuthFormWidget(
-                        register: authState.registerAccount,
-                        signIn: authState.signInWithEmailAndPassword,
-                        signOut: authState.signOut)),
+                const AuthFormWidget()
               ]),
             ),
           ),

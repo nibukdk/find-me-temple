@@ -1,57 +1,38 @@
-import 'dart:async';
-import 'package:church/auth/auth_state_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-// import 'package:flutter_dotenv/flutter_dotenv.dart';
+enum APP_STATE {
+  initialized,
+  loggedIn,
+  loggedOut,
+}
 
-// String loginKey = dotenv.env['LOGIN_KEY'] as String;
-// String onBoardKey = dotenv.env['ONBOARD_KEY'] as String;
-String loginKey = 'qEBKaNywmD';
-String onBoardKey = 'NVsyZxuJ4U';
+// String onBoardKey = "l&_SbvH[s?1YCmU";
 
-class AppStateProvider extends ChangeNotifier {
-  late final SharedPreferences prefs;
-  bool authState;
-  AppStateProvider({required this.prefs, required this.authState});
+class AppStateProvider with ChangeNotifier {
+  AppStateProvider(this.onBoardCount, this.prefs, this.auth);
+  // final String isLoggedIn;
+  int? onBoardCount;
+  late SharedPreferences prefs;
+  late FirebaseAuth auth;
 
-  // Create variables for different states
-  bool _isLoggedInState = false;
-  bool _isInitializedState = false;
-  bool _isOnboadingState = false;
-  // Create getters
-  bool get getIsLoggedInState => _isLoggedInState;
-  bool get getIsInitializedState => _isInitializedState;
-  bool get getIsOnboadingState => _isOnboadingState;
+  bool? _isOnboarded;
+  bool? _isLoggedIn;
 
-  // Create Setter for login
-  set setIsLoggedInState(bool val) {
-    //change is loggedin val
-    _isLoggedInState = val;
-    notifyListeners();
-  }
+  bool get isOnboard => _isOnboarded as bool;
+  bool get isLoggedIn => _isLoggedIn as bool;
 
-  // Create Setter for onboaring
-  set setIsInitializedState(bool val) {
-    //change isinitialized val
-    _isInitializedState = val;
-    notifyListeners();
-  }
-
-  set setIsOnboardingState(bool val) {
-    _isOnboadingState = val;
-    notifyListeners();
-  }
-
-  Future<void> login() async {
-    _isLoggedInState = true;
+  void hasOnBoarded() async {
+    await prefs.setInt('onBoardKey', 0);
+    _isOnboarded = true;
 
     notifyListeners();
   }
 
-  Future<void> logout() async {
-    _isLoggedInState = false;
-    prefs.setBool(loginKey, false);
+  void hasLoggedIn() async {
+    _isLoggedIn = auth.currentUser != null ? true : false;
+
     notifyListeners();
   }
 }

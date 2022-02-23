@@ -1,18 +1,15 @@
-import 'package:church/models/events.dart';
-import 'package:church/models/temple.dart';
+import 'package:church/models/events_model.dart';
+import 'package:church/models/temple_model.dart';
 
-class UserAuthModel {
-  final String emailId;
+class UserModel {
   final String username;
-  final String userId;
-  // final UserProfileModel userProfile;
+  final String email;
+  UserProfileModel? userProfile;
 
-  const UserAuthModel(
-      // this.userProfile,
-      {
-    required this.emailId,
+  UserModel({
     required this.username,
-    required this.userId,
+    required this.email,
+    this.userProfile,
   });
 }
 
@@ -21,15 +18,15 @@ class UserProfileModel {
   final String address;
   final String lat;
   final String long;
-  final EventsModel favaoriteEvents;
-  final TempleModel favoriteTemples;
+  final EventModel? favaoriteEvents;
+  final TempleModel? favoriteTemples;
 
   UserProfileModel({
     required this.imageUrl,
     required this.address,
     required this.lat,
     required this.long,
-    required this.favaoriteEvents,
-    required this.favoriteTemples,
+    this.favaoriteEvents,
+    this.favoriteTemples,
   });
 }

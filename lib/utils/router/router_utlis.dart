@@ -1,6 +1,6 @@
 enum APP_PAGE {
   // splash,
-  onboarding,
+  onboard,
   auth,
   home,
   error,
@@ -11,7 +11,7 @@ enum APP_PAGE {
 
 extension AppPageExtension on APP_PAGE {
   // create path for routes
-  String get routeString {
+  String get routePath {
     switch (this) {
       case APP_PAGE.home:
         return "/";
@@ -19,8 +19,8 @@ extension AppPageExtension on APP_PAGE {
       case APP_PAGE.error:
         return "/error";
 
-      case APP_PAGE.onboarding:
-        return "/onboarding";
+      case APP_PAGE.onboard:
+        return "/onboard";
 
       case APP_PAGE.auth:
         return "/auth";
@@ -51,8 +51,8 @@ extension AppPageExtension on APP_PAGE {
       case APP_PAGE.error:
         return "ERROR";
 
-      case APP_PAGE.onboarding:
-        return "ONBOARDING";
+      case APP_PAGE.onboard:
+        return "ONBOARD";
 
       case APP_PAGE.auth:
         return "AUTH";
@@ -84,7 +84,7 @@ extension AppPageExtension on APP_PAGE {
       case APP_PAGE.error:
         return "An Error Occured";
 
-      case APP_PAGE.onboarding:
+      case APP_PAGE.onboard:
         return "Welcome To Astha ";
 
       case APP_PAGE.auth:

@@ -1,5 +1,5 @@
+import 'package:church/models/temple_model.dart';
 import 'package:flutter/foundation.dart';
-import '../models/temple.dart';
 
 class TempleProvider with ChangeNotifier {
   // Create the fake list of temples

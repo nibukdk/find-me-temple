@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'package:church/provider/app_state_provider.dart';
-import 'package:flutter/material.dart';
+import 'package:church/screens/auth/local_widgets/auth_input_widget.dart';
+import 'package:church/screens/auth/local_widgets/auth_utils.dart';
+import 'package:church/screens/auth/local_widgets/auth_validators.dart';
+import 'package:church/utils/router/router_utlis.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
-import 'package:church/auth/auth_input_widget.dart';
-import 'package:church/auth/auth_utils.dart';
-import 'package:church/auth/auth_validator.dart';
 import 'package:provider/provider.dart';
 
 class AuthFormWidget extends StatefulWidget {
@@ -74,86 +76,78 @@ class _AuthFormWidgetState extends State<AuthFormWidget> {
     ));
   }
 
-  Future<void> _submitForm(BuildContext context) async {
+  Future<void> _submitForm(
+      BuildContext context, AppStateProvider appStateProvider) async {
     final isValid = _formKey.currentState!.validate();
 
-    String username = usernameController.text;
+    String username = usernameController.text.trim();
+    String email = emailController.text.trim();
+    String password = passwordController.text.trim();
+
     if (isValid) {
       // Save current state if form is valid
       _formKey.currentState!.save();
 
       // Try Sigin Or Register
-      setState(() => _isLoading = true);
-
       if (registerAuthMode) {
-        // setState(() => _isLoading = true);
-
+        setState(() => _isLoading = true);
         try {
-          UserCredential credential =
-              await FirebaseAuth.instance.createUserWithEmailAndPassword(
-            email: emailController.text.trim(),
-            password: passwordController.text.trim(),
-          );
-          if (username.isNotEmpty) {
-            await credential.user!.updateDisplayName(username);
-          }
-          //  appStateProvider.appState(userCredential.user.);
-          // await Provider.of<AppStateProvider>(context)
-          //     .prefs
-          //     .setBool('loginKey', true);
-          await Provider.of<AppStateProvider>(context).login();
+          UserCredential cred = await FirebaseAuth.instance
+              .createUserWithEmailAndPassword(email: email, password: password);
+          await cred.user!.updateDisplayName(username);
+          appStateProvider.hasLoggedIn();
 
           ScaffoldMessenger.of(context)
               .showSnackBar(msgPopUp("The account has been registered."));
-
-          // GoRouter.of(context).go("/");
+          GoRouter.of(context).goNamed(APP_PAGE.home.routeName);
         } on FirebaseAuthException catch (e) {
+          print(e);
           if (e.code == "email-already-in-use") {
             ScaffoldMessenger.of(context).showSnackBar(
                 msgPopUp("The account already exists for that email"));
           }
-          setState(() => _isLoading = false);
-        } catch (e) {
-          ScaffoldMessenger.of(context).showSnackBar(msgPopUp(e.toString()));
-          setState(() => _isLoading = false);
-        }
-      } else {
-        // Sigin IN
-        try {
-          UserCredential credential =
-              await FirebaseAuth.instance.signInWithEmailAndPassword(
-            email: emailController.text.trim(),
-            password: passwordController.text.trim(),
-          );
-
-          ScaffoldMessenger.of(context).showSnackBar(msgPopUp("Welcome Back"));
-          await Provider.of<AppStateProvider>(context)
-              .prefs
-              .setBool('loginKey', true);
-
-          // GoRouter.of(context).go("/");
-        } on FirebaseAuthException catch (e) {
-          if (e.code == 'user-not-found') {
+          if (e.code == 'weak-password') {
             ScaffoldMessenger.of(context)
-                .showSnackBar(msgPopUp('No user found for that email.'));
-          }
-          if (e.code == 'wrong-password') {
-            ScaffoldMessenger.of(context)
-                .showSnackBar(msgPopUp('Wrong password.'));
+                .showSnackBar(msgPopUp("The password provided is too weak."));
           }
           setState(() => _isLoading = false);
         } catch (e) {
+          print(e);
           ScaffoldMessenger.of(context).showSnackBar(msgPopUp(e.toString()));
           setState(() => _isLoading = false);
         }
+      }
+    } else {
+      setState(() => _isLoading = true);
+
+      try {
+        UserCredential cred = await FirebaseAuth.instance
+            .signInWithEmailAndPassword(email: email, password: password);
+        appStateProvider.hasLoggedIn();
+
+        ScaffoldMessenger.of(context).showSnackBar(msgPopUp("Welcome Back"));
+        GoRouter.of(context).goNamed(APP_PAGE.home.routeName);
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'user-not-found') {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(msgPopUp('No user found for that email.'));
+        }
+        if (e.code == 'wrong-password') {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(msgPopUp('Wrong password.'));
+        }
+        setState(() => _isLoading = false);
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(msgPopUp(e.toString()));
+        setState(() => _isLoading = false);
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    // final appStateProvider = Provider.of<AppStateProvider>(context,list);
-
+    final AppStateProvider appStateProvider =
+        Provider.of<AppStateProvider>(context);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Form(
@@ -259,7 +253,7 @@ class _AuthFormWidgetState extends State<AuthFormWidget> {
                     width: 20,
                   ),
                   ElevatedButton(
-                    onPressed: () => _submitForm(context),
+                    onPressed: () => _submitForm(context, appStateProvider),
                     child: Text(registerAuthMode ? 'Register' : 'Sign In'),
                     style: ButtonStyle(
                       elevation: MaterialStateProperty.all(8.0),
@@ -291,3 +285,20 @@ class _AuthFormWidgetState extends State<AuthFormWidget> {
     );
   }
 }
+
+
+
+//           if (e.code == 'user-not-found') {
+//             return ScaffoldMessenger.of(context)
+//                 .showSnackBar(msgPopUp('No user found for that email.'));
+//           }
+//           if (e.code == 'wrong-password') {
+//             return ScaffoldMessenger.of(context)
+//                 .showSnackBar(msgPopUp('Wrong password.'));
+//           }
+//           setState(() => _isLoading = false);
+//         }, test: (e) => e is FirebaseAuthException).catchError((e) =>
+//                 ScaffoldMessenger.of(context)
+//                     .showSnackBar(msgPopUp(e.toString())));
+//         setState(() => _isLoading = false);
+//       }
