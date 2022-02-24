@@ -1,3 +1,4 @@
+import 'package:church/provider/auth_state_provider.dart';
 import 'package:church/provider/events_provider.dart';
 import 'package:church/provider/temple_provider.dart';
 import 'package:church/screens/events/events_list_screen.dart';
@@ -25,28 +26,56 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   late AppStateProvider appStateProvider;
+
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  void initState() {
+    super.initState();
     appStateProvider = AppStateProvider(
         widget.onBoardCount, widget.prefs, widget.authInstance);
+  }
+
+  @override
+  void didChangeDependencies() {
+    appStateProvider = AppStateProvider(
+        widget.onBoardCount, widget.prefs, widget.authInstance);
+    super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
+        ChangeNotifierProvider(create: (context) => AuthStateProvider()),
+        ChangeNotifierProxyProvider<AuthStateProvider, AppStateProvider>(
             create: (context) => AppStateProvider(
-                widget.onBoardCount, widget.prefs, widget.authInstance)),
-        ChangeNotifierProvider(create: (context) => EventsProvider()),
-        ChangeNotifierProvider(create: (context) => TempleProvider()),
+                widget.onBoardCount,
+                widget.prefs,
+                Provider.of<AuthStateProvider>(context, listen: false)
+                    .authInstance),
+            update: (context, authState, appState) => AppStateProvider(
+                widget.onBoardCount, widget.prefs, authState.authInstance)),
         Provider(
-            create: (context) => AppRouter(
-                appStateProvider: appStateProvider,
-                onBoardCount: widget.onBoardCount,
-                prefs: widget.prefs,
-                authInstance: widget.authInstance)),
+          create: (context) => AppRouter(
+            appStateProvider: appStateProvider,
+            onBoardCount: widget.onBoardCount,
+            prefs: widget.prefs,
+          ),
+        ),
+
+        // ProxyProvider<AppStateProvider, AppRouter>(
+        //     create: (context) => AppRouter(
+        //           appStateProvider:
+        //               Provider.of<AppStateProvider>(context, listen: false),
+        //           onBoardCount: widget.onBoardCount,
+        //           prefs: widget.prefs,
+        //         ),
+        //     update: (context, appState, appRouter) => AppRouter(
+        //           appStateProvider: appState,
+        //           onBoardCount: widget.onBoardCount,
+        //           prefs: widget.prefs,
+        //         )),
+        ChangeNotifierProvider(create: (context) => TempleProvider()),
+        ChangeNotifierProvider(create: (context) => EventsProvider()),
       ],
       child: Builder(
         builder: ((context) {

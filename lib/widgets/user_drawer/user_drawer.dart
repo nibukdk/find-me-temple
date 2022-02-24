@@ -1,4 +1,7 @@
+import 'package:church/provider/auth_state_provider.dart';
+import 'package:church/utils/router/router_utlis.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import 'package:church/provider/app_state_provider.dart';
@@ -14,15 +17,7 @@ class _UserDrawerState extends State<UserDrawer> {
   @override
   Widget build(BuildContext context) {
     AppStateProvider auth = Provider.of<AppStateProvider>(context);
-    final availableHeight = MediaQuery.of(context).size.height -
-        AppBar().preferredSize.height -
-        MediaQuery.of(context).padding.top -
-        MediaQuery.of(context).padding.bottom;
 
-    final availableWidth = MediaQuery.of(context).size.width -
-        AppBar().preferredSize.width -
-        MediaQuery.of(context).padding.top -
-        MediaQuery.of(context).padding.bottom;
     return AlertDialog(
       backgroundColor: const Color.fromARGB(255, 255, 209, 166),
       actionsPadding: EdgeInsets.zero,
@@ -40,13 +35,15 @@ class _UserDrawerState extends State<UserDrawer> {
       ),
       actions: [
         ListTile(
-          leading: Icon(
-            Icons.logout,
-            color: Theme.of(context).colorScheme.secondary,
-          ),
-          title: const Text('Logout'),
-          onTap: () {},
-        )
+            leading: Icon(
+              Icons.logout,
+              color: Theme.of(context).colorScheme.secondary,
+            ),
+            title: const Text('Logout'),
+            onTap: () {
+              Provider.of<AuthStateProvider>(context, listen: false).logOut();
+              GoRouter.of(context).goNamed(APP_PAGE.home.routeName);
+            })
       ],
     );
   }

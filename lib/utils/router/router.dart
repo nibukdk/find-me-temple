@@ -12,14 +12,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AppRouter {
   late AppStateProvider appStateProvider;
   late SharedPreferences prefs;
-  final FirebaseAuth authInstance;
+  // final FirebaseAuth authInstance;
   int? onBoardCount;
 
-  AppRouter(
-      {required this.appStateProvider,
-      required this.onBoardCount,
-      required this.prefs,
-      required this.authInstance});
+  AppRouter({
+    required this.appStateProvider,
+    required this.onBoardCount,
+    required this.prefs,
+    // required this.authInstance
+  });
   get router => _router;
 
   late final _router = GoRouter(
@@ -54,17 +55,17 @@ class AppRouter {
       redirect: (state) {
         final String onboardLocation =
             state.namedLocation(APP_PAGE.onboard.routeName);
-        final String homeLocation =
-            state.namedLocation(APP_PAGE.home.routeName);
+
         final String authLocation =
             state.namedLocation(APP_PAGE.auth.routeName);
 
         bool isOnboarding = state.subloc == onboardLocation;
-        bool isGoingHome = state.subloc == homeLocation;
         bool isLogginIn = state.subloc == authLocation;
 
         bool? toOnboard = prefs.containsKey('onBoardKey') ? false : true;
-        bool? isLoggedIn = authInstance.currentUser != null ? true : false;
+        // bool? isLoggedIn = authInstance.currentUser != null ? true : false;
+        bool? isLoggedIn =
+            appStateProvider.auth.currentUser == null ? false : true;
 
         print("Is LoggedIn is $isLoggedIn");
         if (toOnboard) {
@@ -73,9 +74,7 @@ class AppRouter {
         } else if (!isLoggedIn) {
           return isLogginIn ? null : authLocation;
         }
-        // else if (!toOnboard && isLoggedIn) {
-        //   return isGoingHome ? null : homeLocation;
-        // }
+
         return null;
       });
 }

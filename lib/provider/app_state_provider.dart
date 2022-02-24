@@ -2,14 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-enum APP_STATE {
-  initialized,
-  loggedIn,
-  loggedOut,
-}
-
-// String onBoardKey = "l&_SbvH[s?1YCmU";
-
 class AppStateProvider with ChangeNotifier {
   AppStateProvider(this.onBoardCount, this.prefs, this.auth);
   // final String isLoggedIn;
@@ -32,7 +24,6 @@ class AppStateProvider with ChangeNotifier {
 
   void hasLoggedIn() async {
     _isLoggedIn = auth.currentUser != null ? true : false;
-
     notifyListeners();
   }
 }

@@ -1,14 +1,11 @@
-import 'dart:async';
-import 'package:church/provider/app_state_provider.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+//
+import 'package:church/provider/auth_state_provider.dart';
+import 'package:church/screens/auth/auth_utils.dart';
 import 'package:church/screens/auth/local_widgets/auth_input_widget.dart';
 import 'package:church/screens/auth/local_widgets/auth_utils.dart';
 import 'package:church/screens/auth/local_widgets/auth_validators.dart';
-import 'package:church/utils/router/router_utlis.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-
-import 'package:provider/provider.dart';
 
 class AuthFormWidget extends StatefulWidget {
   const AuthFormWidget({Key? key}) : super(key: key);
@@ -22,12 +19,12 @@ class _AuthFormWidgetState extends State<AuthFormWidget> {
   final AuthValidators authValidator = AuthValidators();
 
   // Define Form key
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
   // controllers
-  final emailController = TextEditingController();
-  final usernameController = TextEditingController();
-  final passwordController = TextEditingController();
-  final confirmPasswordController = TextEditingController();
+  late TextEditingController emailController;
+  late TextEditingController usernameController;
+  late TextEditingController passwordController;
+  late TextEditingController confirmPasswordController;
 
 // create focus nodes
   late FocusNode emailFocusNode;
@@ -37,16 +34,35 @@ class _AuthFormWidgetState extends State<AuthFormWidget> {
 
   bool obscureText = true;
   bool registerAuthMode = true;
-  bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
+    emailController = TextEditingController();
+    usernameController = TextEditingController();
+    passwordController = TextEditingController();
+    confirmPasswordController = TextEditingController();
+
     emailFocusNode = FocusNode();
     usernameFocusNode = FocusNode();
     passwordFocusNode = FocusNode();
     confirmPasswordFocusNode = FocusNode();
   }
+
+  // @override
+  // void didChangeDependencies() {
+  //   // TODO: implement didChangeDependencies
+  //   super.didChangeDependencies();
+  //   emailController = TextEditingController();
+  //   usernameController = TextEditingController();
+  //   passwordController = TextEditingController();
+  //   confirmPasswordController = TextEditingController();
+
+  //   emailFocusNode = FocusNode();
+  //   usernameFocusNode = FocusNode();
+  //   passwordFocusNode = FocusNode();
+  //   confirmPasswordFocusNode = FocusNode();
+  // }
 
   @override
   void dispose() {
@@ -55,8 +71,10 @@ class _AuthFormWidgetState extends State<AuthFormWidget> {
     emailController.dispose();
     usernameController.dispose();
     passwordController.dispose();
+    confirmPasswordController.dispose();
 
     emailFocusNode.dispose();
+    usernameFocusNode.dispose();
     passwordFocusNode.dispose();
     confirmPasswordFocusNode.dispose();
   }
@@ -76,8 +94,8 @@ class _AuthFormWidgetState extends State<AuthFormWidget> {
     ));
   }
 
-  Future<void> _submitForm(
-      BuildContext context, AppStateProvider appStateProvider) async {
+  void _submitForm(
+      AuthStateProvider authStateProvider, BuildContext context) async {
     final isValid = _formKey.currentState!.validate();
 
     String username = usernameController.text.trim();
@@ -90,64 +108,18 @@ class _AuthFormWidgetState extends State<AuthFormWidget> {
 
       // Try Sigin Or Register
       if (registerAuthMode) {
-        setState(() => _isLoading = true);
-        try {
-          UserCredential cred = await FirebaseAuth.instance
-              .createUserWithEmailAndPassword(email: email, password: password);
-          await cred.user!.updateDisplayName(username);
-          appStateProvider.hasLoggedIn();
-
-          ScaffoldMessenger.of(context)
-              .showSnackBar(msgPopUp("The account has been registered."));
-          GoRouter.of(context).goNamed(APP_PAGE.home.routeName);
-        } on FirebaseAuthException catch (e) {
-          print(e);
-          if (e.code == "email-already-in-use") {
-            ScaffoldMessenger.of(context).showSnackBar(
-                msgPopUp("The account already exists for that email"));
-          }
-          if (e.code == 'weak-password') {
-            ScaffoldMessenger.of(context)
-                .showSnackBar(msgPopUp("The password provided is too weak."));
-          }
-          setState(() => _isLoading = false);
-        } catch (e) {
-          print(e);
-          ScaffoldMessenger.of(context).showSnackBar(msgPopUp(e.toString()));
-          setState(() => _isLoading = false);
-        }
+        authStateProvider.register(email, password, username, context);
       }
     } else {
-      setState(() => _isLoading = true);
-
-      try {
-        UserCredential cred = await FirebaseAuth.instance
-            .signInWithEmailAndPassword(email: email, password: password);
-        appStateProvider.hasLoggedIn();
-
-        ScaffoldMessenger.of(context).showSnackBar(msgPopUp("Welcome Back"));
-        GoRouter.of(context).goNamed(APP_PAGE.home.routeName);
-      } on FirebaseAuthException catch (e) {
-        if (e.code == 'user-not-found') {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(msgPopUp('No user found for that email.'));
-        }
-        if (e.code == 'wrong-password') {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(msgPopUp('Wrong password.'));
-        }
-        setState(() => _isLoading = false);
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(msgPopUp(e.toString()));
-        setState(() => _isLoading = false);
-      }
+      authStateProvider.login(email, password, context);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final AppStateProvider appStateProvider =
-        Provider.of<AppStateProvider>(context);
+    final AuthStateProvider authStateProvider =
+        Provider.of<AuthStateProvider>(context);
+    final ViewState viewState = authStateProvider.viewState;
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Form(
@@ -240,8 +212,8 @@ class _AuthFormWidgetState extends State<AuthFormWidget> {
                 height: 20,
               ),
             ),
-            if (_isLoading) const CircularProgressIndicator(),
-            if (!_isLoading)
+            if (viewState == ViewState.busy) const CircularProgressIndicator(),
+            if (viewState == ViewState.idle)
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -253,7 +225,7 @@ class _AuthFormWidgetState extends State<AuthFormWidget> {
                     width: 20,
                   ),
                   ElevatedButton(
-                    onPressed: () => _submitForm(context, appStateProvider),
+                    onPressed: () => _submitForm(authStateProvider, context),
                     child: Text(registerAuthMode ? 'Register' : 'Sign In'),
                     style: ButtonStyle(
                       elevation: MaterialStateProperty.all(8.0),
@@ -271,8 +243,10 @@ class _AuthFormWidgetState extends State<AuthFormWidget> {
                     ? AuthMode.register.titleText
                     : AuthMode.signin.titleText),
                 TextButton(
-                  onPressed: () =>
-                      setState(() => registerAuthMode = !registerAuthMode),
+                  onPressed: () {
+                    setState(() => registerAuthMode = !registerAuthMode);
+                    print("Register auth mode is  $registerAuthMode");
+                  },
                   child: Text(registerAuthMode
                       ? AuthMode.register.linkText
                       : AuthMode.signin.linkText),
@@ -285,20 +259,3 @@ class _AuthFormWidgetState extends State<AuthFormWidget> {
     );
   }
 }
-
-
-
-//           if (e.code == 'user-not-found') {
-//             return ScaffoldMessenger.of(context)
-//                 .showSnackBar(msgPopUp('No user found for that email.'));
-//           }
-//           if (e.code == 'wrong-password') {
-//             return ScaffoldMessenger.of(context)
-//                 .showSnackBar(msgPopUp('Wrong password.'));
-//           }
-//           setState(() => _isLoading = false);
-//         }, test: (e) => e is FirebaseAuthException).catchError((e) =>
-//                 ScaffoldMessenger.of(context)
-//                     .showSnackBar(msgPopUp(e.toString())));
-//         setState(() => _isLoading = false);
-//       }
