@@ -1,3 +1,5 @@
+import 'package:church/utils/router/router_utlis.dart';
+import 'package:church/widgets/app_bar/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -8,6 +10,7 @@ import 'package:church/widgets/user_drawer/user_drawer.dart';
 
 class EventsListScreen extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+  get scaffoldKey => _scaffoldKey;
 
   @override
   Widget build(BuildContext context) {
@@ -17,15 +20,9 @@ class EventsListScreen extends StatelessWidget {
     return Scaffold(
       key: _scaffoldKey,
       drawer: const UserDrawer(),
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: const Text("Events Screen"),
-        actions: [
-          IconButton(
-              // onPressed: () => UserDrawer(),
-              onPressed: () => _scaffoldKey.currentState!.openDrawer(),
-              icon: const Icon(Icons.person))
-        ],
+      appBar: CustomAppBar(
+        scaffoldKey: scaffoldKey,
+        title: APP_PAGE.events.routePageTitle,
       ),
       bottomNavigationBar: BottomNavBar(navItemIndex: 1),
       body: SafeArea(

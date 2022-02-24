@@ -1,4 +1,5 @@
 import 'package:church/utils/router/router_utlis.dart';
+import 'package:church/widgets/app_bar/custom_app_bar.dart';
 import 'package:church/widgets/user_drawer/user_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -31,20 +32,15 @@ class _HomeState extends State<Home> {
   get onMapCreated => _onMapCreated;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+  get scaffoldKey => _scaffoldKey;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
       drawer: const UserDrawer(),
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Text(APP_PAGE.home.routePageTitle),
-        actions: [
-          IconButton(
-              // onPressed: () => UserDrawer(),
-              onPressed: () => _scaffoldKey.currentState!.openDrawer(),
-              icon: const Icon(Icons.person))
-        ],
+      appBar: CustomAppBar(
+        scaffoldKey: scaffoldKey,
+        title: APP_PAGE.home.routePageTitle,
       ),
       primary: true,
       bottomNavigationBar: BottomNavBar(navItemIndex: 0),
