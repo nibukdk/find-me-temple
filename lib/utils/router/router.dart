@@ -4,8 +4,8 @@ import 'package:church/screens/home/home.dart';
 import 'package:church/provider/app_state_provider.dart';
 import 'package:church/screens/onboarding/onboard.dart';
 import 'package:church/screens/temples/temple_list_screen.dart';
+import 'package:church/utils/permissions/permissions.dart';
 import 'package:church/utils/router/router_utlis.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

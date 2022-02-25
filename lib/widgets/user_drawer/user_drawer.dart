@@ -16,8 +16,6 @@ class UserDrawer extends StatefulWidget {
 class _UserDrawerState extends State<UserDrawer> {
   @override
   Widget build(BuildContext context) {
-    AppStateProvider auth = Provider.of<AppStateProvider>(context);
-
     return AlertDialog(
       backgroundColor: const Color.fromARGB(255, 255, 209, 166),
       actionsPadding: EdgeInsets.zero,
@@ -42,7 +40,7 @@ class _UserDrawerState extends State<UserDrawer> {
             title: const Text('Logout'),
             onTap: () {
               Provider.of<AuthStateProvider>(context, listen: false).logOut();
-              GoRouter.of(context).goNamed(APP_PAGE.home.routeName);
+              GoRouter.of(context).goNamed(APP_PAGE.auth.routeName);
             })
       ],
     );

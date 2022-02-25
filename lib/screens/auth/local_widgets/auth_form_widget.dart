@@ -49,21 +49,6 @@ class _AuthFormWidgetState extends State<AuthFormWidget> {
     confirmPasswordFocusNode = FocusNode();
   }
 
-  // @override
-  // void didChangeDependencies() {
-  //   // TODO: implement didChangeDependencies
-  //   super.didChangeDependencies();
-  //   emailController = TextEditingController();
-  //   usernameController = TextEditingController();
-  //   passwordController = TextEditingController();
-  //   confirmPasswordController = TextEditingController();
-
-  //   emailFocusNode = FocusNode();
-  //   usernameFocusNode = FocusNode();
-  //   passwordFocusNode = FocusNode();
-  //   confirmPasswordFocusNode = FocusNode();
-  // }
-
   @override
   void dispose() {
     super.dispose();
@@ -243,10 +228,8 @@ class _AuthFormWidgetState extends State<AuthFormWidget> {
                     ? AuthMode.register.titleText
                     : AuthMode.signin.titleText),
                 TextButton(
-                  onPressed: () {
-                    setState(() => registerAuthMode = !registerAuthMode);
-                    print("Register auth mode is  $registerAuthMode");
-                  },
+                  onPressed: () =>
+                      setState(() => registerAuthMode = !registerAuthMode),
                   child: Text(registerAuthMode
                       ? AuthMode.register.linkText
                       : AuthMode.signin.linkText),
