@@ -17,6 +17,18 @@ ThemeData _findTempleTheme() {
       onBackground: Colors.black,
     ),
     textTheme: _findTempleTextTheme(base.textTheme),
+    // Set Themes for Input
+    inputDecorationTheme: const InputDecorationTheme(
+      labelStyle: TextStyle(color: Colors.black),
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(
+          width: 1.0,
+          color: Colors.black,
+          style: BorderStyle.solid,
+        ),
+      ),
+    ),
+
     // Define styles for elevated button
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
