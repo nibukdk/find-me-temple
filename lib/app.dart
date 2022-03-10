@@ -63,6 +63,7 @@ class _MyAppState extends State<MyApp> {
             prefs: widget.prefs,
           ),
         ),
+        // ChangeNotifierProvider(create: (context) => SearchPlacesProvider()),
         ChangeNotifierProvider(create: (context) => TempleProvider()),
         ChangeNotifierProvider(create: (context) => EventsProvider()),
       ],

@@ -33,7 +33,7 @@ class _AuthFormWidgetState extends State<AuthFormWidget> {
   late FocusNode confirmPasswordFocusNode;
 
   bool obscureText = true;
-  bool registerAuthMode = true;
+  bool registerAuthMode = false;
 
   @override
   void initState() {

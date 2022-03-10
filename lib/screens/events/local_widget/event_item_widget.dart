@@ -25,12 +25,13 @@ class EventItemWidget extends StatelessWidget {
         padding: const EdgeInsets.all(4.0),
         child: ListTile(
           // tileColor: Theme.of(context).colorScheme.primary,
-          // tileColor: Colors.blueGrey,
+          // tileColor: Colors.grey,
 
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-              side: BorderSide(
-                  color: Theme.of(context).colorScheme.secondary, width: 0.5)),
+            borderRadius: BorderRadius.circular(10),
+            side: BorderSide(
+                color: Theme.of(context).colorScheme.secondary, width: 0.1),
+          ),
           style: ListTileStyle.list,
           leading: CircleAvatar(
             backgroundImage: AssetImage(

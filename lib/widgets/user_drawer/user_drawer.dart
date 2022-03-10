@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import 'package:church/provider/app_state_provider.dart';
-
 class UserDrawer extends StatefulWidget {
   const UserDrawer({Key? key}) : super(key: key);
 

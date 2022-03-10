@@ -14,7 +14,7 @@ class TempleListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final templeList = Provider.of<TempleProvider>(context).getTemples;
+    final templeList = Provider.of<TempleProvider>(context).temples;
     return Scaffold(
       key: _scaffoldKey,
       drawer: const UserDrawer(),
@@ -23,7 +23,7 @@ class TempleListScreen extends StatelessWidget {
         title: APP_PAGE.temples.routePageTitle,
       ),
       bottomNavigationBar: BottomNavBar(
-        navItemIndex: 2,
+        navItemIndex: 1,
       ),
       body: SafeArea(
         child: SizedBox(
@@ -45,8 +45,8 @@ class TempleListScreen extends StatelessWidget {
                   itemBuilder: (context, i) => TempleItemWidget(
                     title: templeList[i].name,
                     address: templeList[i].address,
-                    imageUrl: templeList[i].imgUrl,
-                    establishedDate: templeList[i].establishedDate.toString(),
+                    // imageUrl: templeList[i].imgUrl,
+                    // establishedDate: templeList[i].establishedDate.toString(),
                   ),
                   itemCount: templeList.length,
                 ),

@@ -12,8 +12,9 @@ class AuthScreen extends StatelessWidget {
       // drawer: const CustomDrawer(),
       // bottomNavigationBar: const BottomNavBar(),
       body: SafeArea(
-        child: GestureDetector(
-          onTap: () => FocusScope.of(context).unfocus(),
+        child: Listener(
+          onPointerDown: (PointerDownEvent event) =>
+              FocusManager.instance.primaryFocus?.unfocus(),
           child: SingleChildScrollView(
             child: SizedBox(
               // height: MediaQuery.of(context).size.height * 0.9,

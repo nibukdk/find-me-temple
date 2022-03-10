@@ -1,6 +1,7 @@
 import 'package:church/models/user.dart';
 import 'package:church/screens/auth/auth_utils.dart';
 import 'package:church/utils/router/router_utlis.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -12,7 +13,6 @@ class AuthStateProvider extends ChangeNotifier {
 
   UserModel? _user;
   String? _email;
-  String? _password;
   String? _username;
 
   UserModel get user => _user as UserModel;
@@ -20,7 +20,6 @@ class AuthStateProvider extends ChangeNotifier {
   ViewState get viewState => _viewState;
 
   get email => _email;
-  get password => _password;
   get username => _username;
 
   // setAuthState(AuthState authState) {
@@ -62,9 +61,19 @@ class AuthStateProvider extends ChangeNotifier {
       UserCredential userCred = await authInstance
           .createUserWithEmailAndPassword(email: email, password: password);
       await userCred.user!.updateDisplayName(username);
+
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userCred.user!.uid)
+          .set(
+        {
+          'username': username,
+          'email': email,
+        },
+      );
       _email = email;
       _username = username;
-      _password = password;
+      _user = UserModel(username: username, email: email);
       ScaffoldMessenger.of(context)
           .showSnackBar(msgPopUp("The account has been registered."));
       GoRouter.of(context).goNamed(APP_PAGE.home.routeName);
@@ -134,4 +143,8 @@ class AuthStateProvider extends ChangeNotifier {
     await authInstance.signOut();
     setViewState(ViewState.idle);
   }
+
+  // void saveUser(username, email) {
+  //   _user = UserModel(username: username, email: email);
+  // }
 }

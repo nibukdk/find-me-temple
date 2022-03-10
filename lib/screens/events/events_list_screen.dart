@@ -24,42 +24,22 @@ class EventsListScreen extends StatelessWidget {
         scaffoldKey: scaffoldKey,
         title: APP_PAGE.events.routePageTitle,
       ),
-      bottomNavigationBar: BottomNavBar(navItemIndex: 1),
+      bottomNavigationBar: BottomNavBar(navItemIndex: 2),
       body: SafeArea(
-        child: SizedBox(
-          // height: 300,
+        child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             // crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("Upcoming Events",
-                        style: Theme.of(context).textTheme.headline2!),
-                    TextButton(
-                        onPressed: () {
-                          print("txt btn pressed");
-                        },
-                        child: const Text("View All"))
-                  ],
+              ...eventsList.map(
+                (event) => EventItemWidget(
+                  name: event.name,
+                  venue: event.venue,
+                  imgUrl: event.imgUrl,
+                  occassionTime: event.occassionTime,
+                  description: event.description,
                 ),
-              ),
-              Expanded(
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemBuilder: (context, i) => EventItemWidget(
-                    name: eventsList[i].name,
-                    venue: eventsList[i].venue,
-                    imgUrl: eventsList[i].imgUrl,
-                    occassionTime: eventsList[i].occassionTime,
-                    description: eventsList[i].description,
-                  ),
-                  itemCount: eventsList.length,
-                ),
-              ),
+              )
             ],
           ),
         ),
@@ -81,3 +61,18 @@ class EventsListScreen extends StatelessWidget {
 //               style: Theme.of(context).textTheme.headline2,
 //             ),
 //           ),
+
+
+// Expanded(
+//                 child: ListView.builder(
+//                   shrinkWrap: true,
+//                   itemBuilder: (context, i) => EventItemWidget(
+//                     name: eventsList[i].name,
+//                     venue: eventsList[i].venue,
+//                     imgUrl: eventsList[i].imgUrl,
+//                     occassionTime: eventsList[i].occassionTime,
+//                     description: eventsList[i].description,
+//                   ),
+//                   itemCount: eventsList.length,
+//                 ),
+//               ),

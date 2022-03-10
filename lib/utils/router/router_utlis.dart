@@ -7,6 +7,7 @@ enum APP_PAGE {
   events,
   temples,
   shop,
+  search
 }
 
 extension AppPageExtension on APP_PAGE {
@@ -15,6 +16,9 @@ extension AppPageExtension on APP_PAGE {
     switch (this) {
       case APP_PAGE.home:
         return "/";
+
+      case APP_PAGE.search:
+        return "home/search";
 
       case APP_PAGE.error:
         return "/error";
@@ -48,6 +52,9 @@ extension AppPageExtension on APP_PAGE {
       case APP_PAGE.home:
         return "HOME";
 
+      case APP_PAGE.search:
+        return "SEARCH";
+
       case APP_PAGE.error:
         return "ERROR";
 
@@ -80,6 +87,9 @@ extension AppPageExtension on APP_PAGE {
     switch (this) {
       case APP_PAGE.home:
         return "Astha";
+
+      case APP_PAGE.search:
+        return "Search..";
 
       case APP_PAGE.error:
         return "An Error Occured";

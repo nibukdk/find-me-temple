@@ -1,13 +1,14 @@
+import 'package:church/screens/search/search_page_screen.dart';
+import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+//
 import 'package:church/screens/auth/auth_screen.dart';
 import 'package:church/screens/events/events_list_screen.dart';
 import 'package:church/screens/home/home.dart';
 import 'package:church/provider/app_state_provider.dart';
 import 'package:church/screens/onboarding/onboard.dart';
 import 'package:church/screens/temples/temple_list_screen.dart';
-import 'package:church/utils/permissions/permissions.dart';
 import 'package:church/utils/router/router_utlis.dart';
-import 'package:go_router/go_router.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AppRouter {
   late AppStateProvider appStateProvider;
@@ -30,6 +31,13 @@ class AppRouter {
         GoRoute(
           path: APP_PAGE.home.routePath,
           name: APP_PAGE.home.routeName,
+          routes: [
+            // GoRoute(
+            //   path: APP_PAGE.search.routePath,
+            //   name: APP_PAGE.search.routeName,
+            //   builder: (context, state) => const SearchPageScreen(),
+            // ),
+          ],
           builder: (context, state) => const Home(),
         ),
         GoRoute(

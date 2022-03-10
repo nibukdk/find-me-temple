@@ -16,8 +16,9 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
   static final List<String> _widgetOptions = [
     APP_PAGE.home.routeName,
-    APP_PAGE.events.routeName,
     APP_PAGE.temples.routeName,
+    APP_PAGE.events.routeName,
+    // APP_PAGE.search.routeName,
   ];
 
   void _onItemTapped(int index) {
@@ -33,12 +34,12 @@ class _BottomNavBarState extends State<BottomNavBar> {
           label: 'Home',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.event),
-          label: 'Events',
+          icon: Icon(Icons.temple_hindu_sharp),
+          label: 'Temples',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.shop_2),
-          label: 'Shops',
+          icon: Icon(Icons.event_available),
+          label: 'Events',
         ),
       ],
       backgroundColor: Theme.of(context).colorScheme.primary,
